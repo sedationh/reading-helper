@@ -1,0 +1,33 @@
+@import "bytemd/dist/index.css";
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  padding: 6px 12px;
+  height: 100vh;
+}
+
+.container > h1 {
+  text-align: center;
+  height: 50px;
+  line-height: 50px;
+}
+
+.container > div {
+  height: 100%;
+}
+
+.bytemd {
+  height: 100%;
+}
+
+.markdown-body p {
+  line-height: 1.6em;
+  margin-bottom: 1rem;
+}
