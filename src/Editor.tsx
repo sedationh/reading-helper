@@ -12,7 +12,7 @@ const EditorView = () => {
   });
 
   useMount(() => {
-    // 点击预览按钮
+    // 自动点击预览按钮
     setTimeout(() => {
       const [editEle, previewEle] = document.querySelectorAll(
         ".bytemd-toolbar-tab"
