@@ -1,4 +1,4 @@
-# 有什么用？
+## 有什么用？
 
 利用这个网站，你可以很方便的将自己的输入与一些浏览器插件进行结合
 
@@ -12,7 +12,7 @@
 
 搭配 [Relingo](https://chromewebstore.google.com/detail/relingo-master-words-bili/dpphkcfmnbkdpmgneljgdhfnccnhmfig?hl=en) 和 [沉浸式翻译](https://immersivetranslate.com/) 来使用
 
-# Tips
+## Tips
 
 1. 如果你不想动键盘，可以点击这里直接粘贴你的剪贴板
 <img width="592" alt="image" src="https://github.com/user-attachments/assets/9776215b-f4fe-4136-8068-2f233dd0b650">
