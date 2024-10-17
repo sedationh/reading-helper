@@ -50,12 +50,32 @@ const EditorView = () => {
         previewEle?.click();
       }
 
-      editEle?.addEventListener("click", () => {
-        setIsEditing(true);
-      });
-      previewEle?.addEventListener("click", () => {
-        setIsEditing(false);
-      });
+      const handleEditClick = () => setIsEditing(true);
+      const handlePreviewClick = () => setIsEditing(false);
+
+      // Add keyboard event listener for Cmd+V or Ctrl+V
+      const handleKeyDown = async (e: KeyboardEvent) => {
+        if ((e.metaKey || e.ctrlKey) && e.key === "v") {
+          e.preventDefault();
+          try {
+            const text = await navigator.clipboard.readText();
+            setValue(text);
+          } catch (err) {
+            console.error("无法读取剪贴板内容:", err);
+          }
+        }
+      };
+
+      window.addEventListener("keydown", handleKeyDown);
+      editEle?.addEventListener("click", handleEditClick);
+      previewEle?.addEventListener("click", handlePreviewClick);
+
+      // 返回清理函数
+      return () => {
+        editEle?.removeEventListener("click", handleEditClick);
+        previewEle?.removeEventListener("click", handlePreviewClick);
+        window.removeEventListener("keydown", handleKeyDown);
+      };
     }, 200);
   });
 
