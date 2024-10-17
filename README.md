@@ -17,8 +17,6 @@
 1. 如果你不想动键盘，可以点击这里直接粘贴你的剪贴板
 <img width="592" alt="image" src="https://github.com/user-attachments/assets/9776215b-f4fe-4136-8068-2f233dd0b650">
 
-2. 在网页上，任意 CMD + V 即可粘贴内容，并不需要鼠标点击输入框
-
-3. 在窄屏的时候，会有下图俩供你选择，浏览器会存储你的选择，刷新页面不会丢失
+2. 在窄屏的时候，会有下图俩供你选择，浏览器会存储你的选择，刷新页面不会丢失
 
 <img width="461" alt="image" src="https://github.com/user-attachments/assets/a7f9f7d8-166b-4d11-8ec5-02405aac5b35">
