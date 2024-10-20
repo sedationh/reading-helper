@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="410"
+   height="404"
+   viewBox="0 0 410 404"
+   fill="none"
+   version="1.1"
+   id="svg20"
+   xmlns="http://www.w3.org/2000/svg">
+  
+  <!-- 保留背景形状 -->
+  <path
+     d="M399.641 59.5246L215.643 388.545C211.844 395.338 202.084 395.378 198.228 388.618L10.5817 59.5563C6.38087 52.1896 12.6802 43.2665 21.0281 44.7586L205.223 77.6824C206.398 77.8924 207.601 77.8904 208.776 77.6763L389.119 44.8058C397.439 43.2894 403.768 52.1434 399.641 59.5246Z"
+     fill="url(#paint0_linear)"
+     id="path2" />
+  
+  <!-- 添加一个简化的书本图标 -->
+  <path
+     d="M205 120 L105 170 L105 320 L305 320 L305 170 L205 120 Z"
+     fill="#ffffff"
+     stroke="#000000"
+     stroke-width="10"
+     id="book" />
+  
+  <!-- 添加书页线条 -->
+  <path
+     d="M125 190 L285 190 M125 230 L285 230 M125 270 L285 270"
+     stroke="#000000"
+     stroke-width="5"
+     id="lines" />
+  
+  <!-- 添加放大镜 -->
+  <circle
+     cx="280"
+     cy="280"
+     r="40"
+     fill="none"
+     stroke="#000000"
+     stroke-width="10"
+     id="magnifier-glass" />
+  <line
+     x1="310"
+     y1="310"
+     x2="350"
+     y2="350"
+     stroke="#000000"
+     stroke-width="10"
+     id="magnifier-handle" />
+  
+  <defs>
+    <linearGradient
+       id="paint0_linear"
+       x1="6.00017"
+       y1="32.9999"
+       x2="235"
+       y2="344"
+       gradientUnits="userSpaceOnUse">
+      <stop
+         stop-color="#41D1FF"
+         id="stop6" />
+      <stop
+         offset="1"
+         stop-color="#BD34FE"
+         id="stop8" />
+    </linearGradient>
+  </defs>
+</svg>
