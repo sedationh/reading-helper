@@ -14,9 +14,15 @@
 
 ## Tips
 
-1. 如果你不想动键盘，可以点击这里直接粘贴你的剪贴板
+### 如果你不想动键盘，可以点击这里直接粘贴你的剪贴板
 <img width="592" alt="image" src="https://github.com/user-attachments/assets/9776215b-f4fe-4136-8068-2f233dd0b650">
 
-2. 在窄屏的时候，会有下图俩供你选择，浏览器会存储你的选择，刷新页面不会丢失
+### 在窄屏的时候，会有下图俩供你选择，浏览器会存储你的选择，刷新页面不会丢失
 
 <img width="461" alt="image" src="https://github.com/user-attachments/assets/a7f9f7d8-166b-4d11-8ec5-02405aac5b35">
+
+### 支持 PWA, 安装到电脑上独立窗口使用
+
+<img width="1589" alt="image" src="https://github.com/user-attachments/assets/844de76f-bd82-4855-9099-3374b3c0a13b">
+
+![image](https://github.com/user-attachments/assets/cf1acc0d-9634-4d91-9275-1c7c405815a5)
