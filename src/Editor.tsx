@@ -64,6 +64,16 @@ const EditorView = () => {
     }, 200);
   });
 
+  useMount(() => {
+    if (value.endsWith("\nm")) {
+      // 删除上次添加的
+      setValue(value.slice(0, -2));
+    }
+    setTimeout(() => {
+      setValue((value) => value + "\nm");
+    }, 3000);
+  });
+
   return (
     <Editor
       value={value}
