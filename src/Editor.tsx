@@ -138,6 +138,47 @@ const createSelectionPlugin = (timerRef: { current: NodeJS.Timeout | null }): By
   };
 };
 
+// 添加高亮最后一个strong标签的插件
+const highlightLastStrongPlugin = (): BytemdPlugin => {
+  return {
+    viewerEffect({ markdownBody }) {
+      // 创建一个函数来处理高亮
+      const highlightLastStrong = () => {
+        // 获取所有strong标签
+        const strongs = markdownBody.getElementsByTagName('strong');
+        
+        // 移除之前的高亮
+        Array.from(strongs).forEach(strong => {
+          strong.style.backgroundColor = '';
+        });
+        
+        // 如果有strong标签，高亮最后一个
+        if (strongs.length > 0) {
+          const lastStrong = strongs[strongs.length - 1];
+          lastStrong.style.backgroundColor = 'yellow';
+        }
+      };
+
+      // 初始高亮
+      highlightLastStrong();
+
+      // 创建观察器来监听DOM变化
+      const observer = new MutationObserver(highlightLastStrong);
+      
+      // 配置观察器
+      observer.observe(markdownBody, {
+        childList: true,
+        subtree: true
+      });
+
+      // 清理函数
+      return () => {
+        observer.disconnect();
+      };
+    }
+  };
+};
+
 const EditorView = () => {
   const [value, setValue] = useLocalStorageState<string>("editor-content", {
     defaultValue: `# Hello, World!`,
@@ -176,7 +217,7 @@ const EditorView = () => {
   return (
     <Editor
       value={value}
-      plugins={[breaks(), clipboardPlugin(), createSelectionPlugin(selectionTimer)]}
+      plugins={[breaks(), clipboardPlugin(), createSelectionPlugin(selectionTimer), highlightLastStrongPlugin()]}
       onChange={setValue}
     />
   );
