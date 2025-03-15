@@ -352,6 +352,8 @@ const EditorView = () => {
           backgroundColor: "#f5f5f5",
           marginBottom: "10px",
           maxHeight: "fit-content",
+          flexDirection: "row",
+          justifyContent: "end",
           display: "flex",
           alignItems: "center",
           gap: "10px",
