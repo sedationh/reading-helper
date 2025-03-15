@@ -2,8 +2,8 @@ import { Editor } from "@bytemd/react";
 import breaks from "@bytemd/plugin-breaks";
 import { BytemdPlugin } from "bytemd";
 import { useLocalStorageState, useMount } from "ahooks";
-import { useRef } from "react";
-import { notification } from "antd";
+import { useRef, useState } from "react";
+import { notification, Modal, Button, List } from "antd";
 
 // 定义 SVG 图标常量
 const CLIPBOARD_PASTE_ICON_SVG =
@@ -73,10 +73,16 @@ const clipboardPlugin = (): BytemdPlugin => {
   };
 };
 
-const createSelectionHandler = (timerRef: {
-  current: NodeJS.Timeout | null;
-}) => {
+const createSelectionHandler = (
+  timerRef: { current: NodeJS.Timeout | null },
+  disableAutoBoldRef: { current: boolean }
+) => {
   return (editor: any) => {
+    // 如果禁用了自动加粗，直接返回
+    if (disableAutoBoldRef.current) {
+      return;
+    }
+
     console.log("Selection change triggered");
 
     // 获取编辑器中的选中内容
@@ -130,7 +136,7 @@ const createSelectionHandler = (timerRef: {
                 ch: Math.max(anchor.ch, head.ch),
               }
             );
-            
+
             // 如果选中的内容等于全部内容，则不执行加粗操作
             if (selectedText === totalContent) {
               console.log("Select all detected, skipping bold formatting");
@@ -164,11 +170,12 @@ const createSelectionHandler = (timerRef: {
   };
 };
 
-const createSelectionPlugin = (timerRef: {
-  current: NodeJS.Timeout | null;
-}): BytemdPlugin => {
+const createSelectionPlugin = (
+  timerRef: { current: NodeJS.Timeout | null },
+  disableAutoBoldRef: { current: boolean }
+): BytemdPlugin => {
   console.log("Selection plugin initialized");
-  const handleSelection = createSelectionHandler(timerRef);
+  const handleSelection = createSelectionHandler(timerRef, disableAutoBoldRef);
 
   return {
     editorEffect: ({ editor }) => {
@@ -224,17 +231,95 @@ const highlightLastStrongPlugin = (): BytemdPlugin => {
   };
 };
 
+const createEditorRefPlugin = (editorRef: React.MutableRefObject<any>): BytemdPlugin => {
+  return {
+    editorEffect: ({ editor }) => {
+      editorRef.current = editor;
+      return () => {
+        editorRef.current = null;
+      };
+    },
+  };
+};
+
 const EditorView = () => {
   const [value, setValue] = useLocalStorageState<string>("editor-content", {
     defaultValue: `# Hello, World!`,
   });
   const selectionTimer = useRef<NodeJS.Timeout | null>(null);
+  const [boldCount, setBoldCount] = useState(0);
+  const [boldTexts, setBoldTexts] = useState<Array<{ text: string; index: number }>>([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const editorRef = useRef<any>(null);
+  const disableAutoBold = useRef<boolean>(false);
 
   const [isEditing, setIsEditing] = useLocalStorageState("isEditing", {
     defaultValue: false,
   });
 
+  // 更新加粗文本计数的函数
+  const updateBoldCount = (content: string) => {
+    // 使用正则表达式匹配所有加粗文本，并记录位置
+    const matches = content.matchAll(/\*\*([^*]+)\*\*/g);
+    const boldItems = [];
+    let match;
+    
+    while ((match = matches.next().value)) {
+      boldItems.push({
+        text: match[1],
+        index: match.index
+      });
+    }
+    
+    setBoldCount(boldItems.length);
+    setBoldTexts(boldItems);
+  };
+
+  // 定位到指定文本
+  const locateBoldText = (index: number) => {
+    if (!editorRef.current) return;
+    
+    const editor = editorRef.current;
+    const doc = editor.getDoc();
+    const pos = doc.posFromIndex(index);
+    
+    // 将编辑器切换到编辑模式
+    const editTab = document.querySelector('.bytemd-toolbar-tab') as HTMLElement;
+    if (editTab) {
+      editTab.click();
+    }
+
+    // 暂时禁用自动加粗
+    disableAutoBold.current = true;
+
+    // 设置光标位置并滚动到可见区域
+    editor.setCursor(pos);
+    editor.focus();
+    editor.scrollIntoView({ line: pos.line, ch: pos.ch }, 200);
+
+    // 高亮选中文本
+    const text = boldTexts.find(item => item.index === index)?.text;
+    if (text) {
+      const endPos = {
+        line: pos.line,
+        ch: pos.ch + text.length + 4 // +4 for the '**' markers
+      };
+      editor.setSelection(pos, endPos);
+    }
+
+    // 1秒后重新启用自动加粗
+    setTimeout(() => {
+      disableAutoBold.current = false;
+    }, 1000);
+
+    // 关闭 Modal
+    setIsModalVisible(false);
+  };
+
   useMount(() => {
+    // 初始化时计算加粗文本数量
+    updateBoldCount(value || "");
+
     // 自动点击预览按钮
     setTimeout(() => {
       const [editEle, previewEle] = document.querySelectorAll(
@@ -260,16 +345,71 @@ const EditorView = () => {
   });
 
   return (
-    <Editor
-      value={value}
-      plugins={[
-        breaks(),
-        clipboardPlugin(),
-        createSelectionPlugin(selectionTimer),
-        highlightLastStrongPlugin(),
-      ]}
-      onChange={setValue}
-    />
+    <>
+      <div
+        style={{
+          padding: "10px",
+          backgroundColor: "#f5f5f5",
+          marginBottom: "10px",
+          maxHeight: "fit-content",
+          display: "flex",
+          alignItems: "center",
+          gap: "10px",
+        }}
+      >
+        <span>当前加粗文本数量: {boldCount}</span>
+        <Button
+          type="primary"
+          size="small"
+          onClick={() => setIsModalVisible(true)}
+          disabled={boldCount === 0}
+        >
+          查看所有加粗文本
+        </Button>
+      </div>
+
+      <Modal
+        title="所有加粗文本"
+        open={isModalVisible}
+        onCancel={() => setIsModalVisible(false)}
+        footer={null}
+        width={600}
+      >
+        <List
+          dataSource={boldTexts}
+          renderItem={(item, index) => (
+            <List.Item
+              style={{ cursor: 'pointer' }}
+              onClick={() => locateBoldText(item.index)}
+            >
+              <List.Item.Meta
+                title={
+                  <div style={{ color: '#1890ff' }}>
+                    {`${index + 1}. ${item.text}`}
+                  </div>
+                }
+              />
+            </List.Item>
+          )}
+          style={{ maxHeight: "400px", overflow: "auto" }}
+        />
+      </Modal>
+
+      <Editor
+        value={value}
+        plugins={[
+          breaks(),
+          clipboardPlugin(),
+          createSelectionPlugin(selectionTimer, disableAutoBold),
+          highlightLastStrongPlugin(),
+          createEditorRefPlugin(editorRef),
+        ]}
+        onChange={(newValue) => {
+          setValue(newValue);
+          updateBoldCount(newValue);
+        }}
+      />
+    </>
   );
 };
 
