@@ -3,6 +3,7 @@ import breaks from "@bytemd/plugin-breaks";
 import { BytemdPlugin } from "bytemd";
 import { useLocalStorageState, useMount } from "ahooks";
 import { useRef } from "react";
+import { notification } from "antd";
 
 // 定义 SVG 图标常量
 const CLIPBOARD_PASTE_ICON_SVG =
@@ -14,7 +15,7 @@ const CLIPBOARD_COPY_ICON_SVG =
 // 配置常量
 const SELECTION_TIMEOUT_MS = 1000; // 选中文本后等待多少毫秒自动加粗
 
-// 自定义插件函数
+// 剪贴板插件
 const clipboardPlugin = (): BytemdPlugin => {
   return {
     actions: [
@@ -26,9 +27,19 @@ const clipboardPlugin = (): BytemdPlugin => {
           click: async (ctx) => {
             try {
               const text = await navigator.clipboard.readText();
-              ctx.editor.setValue(text); // 清空编辑器并设置新内容
+              ctx.editor.setValue(text);
+              notification.success({
+                message: "粘贴成功",
+                description: "内容已成功粘贴到编辑器",
+                placement: "topRight",
+              });
             } catch (err) {
               console.error("无法读取剪贴板内容:", err);
+              notification.error({
+                message: "粘贴失败",
+                description: "无法读取剪贴板内容",
+                placement: "topRight",
+              });
             }
           },
         },
@@ -42,10 +53,18 @@ const clipboardPlugin = (): BytemdPlugin => {
             try {
               const text = ctx.editor.getValue();
               await navigator.clipboard.writeText(text);
-              // 可以添加一个提示，表示复制成功
-              console.log("内容已复制到剪贴板");
+              notification.success({
+                message: "复制成功",
+                description: "内容已成功复制到剪贴板",
+                placement: "topRight",
+              });
             } catch (err) {
               console.error("无法写入剪贴板:", err);
+              notification.error({
+                message: "复制失败",
+                description: "无法写入剪贴板",
+                placement: "topRight",
+              });
             }
           },
         },
@@ -54,16 +73,18 @@ const clipboardPlugin = (): BytemdPlugin => {
   };
 };
 
-const createSelectionHandler = (timerRef: { current: NodeJS.Timeout | null }) => {
+const createSelectionHandler = (timerRef: {
+  current: NodeJS.Timeout | null;
+}) => {
   return (editor: any) => {
-    console.log('Selection change triggered');
-    
+    console.log("Selection change triggered");
+
     // 获取编辑器中的选中内容
     const selections = editor.listSelections();
-    console.log('Current selections:', selections);
-    
+    console.log("Current selections:", selections);
+
     if (!selections || selections.length === 0) {
-      console.log('No selection found');
+      console.log("No selection found");
       if (timerRef.current) {
         clearTimeout(timerRef.current);
       }
@@ -73,16 +94,16 @@ const createSelectionHandler = (timerRef: { current: NodeJS.Timeout | null }) =>
     // 获取第一个选区
     const selection = selections[0];
     const { anchor, head } = selection;
-    
+
     // 确保选区是有效的（不是光标位置）
     if (anchor.line !== head.line || anchor.ch !== head.ch) {
-      console.log('Valid selection found:', { anchor, head });
-      
+      console.log("Valid selection found:", { anchor, head });
+
       // 清除之前的计时器
       if (timerRef.current) {
         clearTimeout(timerRef.current);
       }
-      
+
       // 设置新的计时器
       timerRef.current = setTimeout(() => {
         console.log(`Timer triggered after ${SELECTION_TIMEOUT_MS}ms`);
@@ -91,29 +112,43 @@ const createSelectionHandler = (timerRef: { current: NodeJS.Timeout | null }) =>
         if (currentSelections && currentSelections.length > 0) {
           const currentSelection = currentSelections[0];
           // 检查选区是否没变
-          if (currentSelection.anchor.line === anchor.line && 
-              currentSelection.anchor.ch === anchor.ch &&
-              currentSelection.head.line === head.line &&
-              currentSelection.head.ch === head.ch) {
+          if (
+            currentSelection.anchor.line === anchor.line &&
+            currentSelection.anchor.ch === anchor.ch &&
+            currentSelection.head.line === head.line &&
+            currentSelection.head.ch === head.ch
+          ) {
             // 获取选中的文本
             const selectedText = editor.getRange(
-              { line: Math.min(anchor.line, head.line), ch: Math.min(anchor.ch, head.ch) },
-              { line: Math.max(anchor.line, head.line), ch: Math.max(anchor.ch, head.ch) }
+              {
+                line: Math.min(anchor.line, head.line),
+                ch: Math.min(anchor.ch, head.ch),
+              },
+              {
+                line: Math.max(anchor.line, head.line),
+                ch: Math.max(anchor.ch, head.ch),
+              }
             );
-            console.log('Selected text to bold:', selectedText);
+            console.log("Selected text to bold:", selectedText);
             if (selectedText) {
               const newText = `**${selectedText}**`;
               editor.replaceRange(
                 newText,
-                { line: Math.min(anchor.line, head.line), ch: Math.min(anchor.ch, head.ch) },
-                { line: Math.max(anchor.line, head.line), ch: Math.max(anchor.ch, head.ch) }
+                {
+                  line: Math.min(anchor.line, head.line),
+                  ch: Math.min(anchor.ch, head.ch),
+                },
+                {
+                  line: Math.max(anchor.line, head.line),
+                  ch: Math.max(anchor.ch, head.ch),
+                }
               );
             }
           }
         }
       }, SELECTION_TIMEOUT_MS);
     } else {
-      console.log('No text selected (cursor only)');
+      console.log("No text selected (cursor only)");
       if (timerRef.current) {
         clearTimeout(timerRef.current);
       }
@@ -121,20 +156,22 @@ const createSelectionHandler = (timerRef: { current: NodeJS.Timeout | null }) =>
   };
 };
 
-const createSelectionPlugin = (timerRef: { current: NodeJS.Timeout | null }): BytemdPlugin => {
-  console.log('Selection plugin initialized');
+const createSelectionPlugin = (timerRef: {
+  current: NodeJS.Timeout | null;
+}): BytemdPlugin => {
+  console.log("Selection plugin initialized");
   const handleSelection = createSelectionHandler(timerRef);
-  
+
   return {
     editorEffect: ({ editor }) => {
-      console.log('Editor effect setup');
+      console.log("Editor effect setup");
       const boundHandler = () => handleSelection(editor);
-      editor.on('cursorActivity', boundHandler);
-      
+      editor.on("cursorActivity", boundHandler);
+
       return () => {
-        editor.off('cursorActivity', boundHandler);
+        editor.off("cursorActivity", boundHandler);
       };
-    }
+    },
   };
 };
 
@@ -145,17 +182,17 @@ const highlightLastStrongPlugin = (): BytemdPlugin => {
       // 创建一个函数来处理高亮
       const highlightLastStrong = () => {
         // 获取所有strong标签
-        const strongs = markdownBody.getElementsByTagName('strong');
-        
+        const strongs = markdownBody.getElementsByTagName("strong");
+
         // 移除之前的高亮
-        Array.from(strongs).forEach(strong => {
-          strong.style.backgroundColor = '';
+        Array.from(strongs).forEach((strong) => {
+          strong.style.backgroundColor = "";
         });
-        
+
         // 如果有strong标签，高亮最后一个
         if (strongs.length > 0) {
           const lastStrong = strongs[strongs.length - 1];
-          lastStrong.style.backgroundColor = 'yellow';
+          lastStrong.style.backgroundColor = "yellow";
         }
       };
 
@@ -164,18 +201,18 @@ const highlightLastStrongPlugin = (): BytemdPlugin => {
 
       // 创建观察器来监听DOM变化
       const observer = new MutationObserver(highlightLastStrong);
-      
+
       // 配置观察器
       observer.observe(markdownBody, {
         childList: true,
-        subtree: true
+        subtree: true,
       });
 
       // 清理函数
       return () => {
         observer.disconnect();
       };
-    }
+    },
   };
 };
 
@@ -217,7 +254,12 @@ const EditorView = () => {
   return (
     <Editor
       value={value}
-      plugins={[breaks(), clipboardPlugin(), createSelectionPlugin(selectionTimer), highlightLastStrongPlugin()]}
+      plugins={[
+        breaks(),
+        clipboardPlugin(),
+        createSelectionPlugin(selectionTimer),
+        highlightLastStrongPlugin(),
+      ]}
       onChange={setValue}
     />
   );
