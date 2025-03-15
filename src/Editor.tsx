@@ -118,7 +118,8 @@ const createSelectionHandler = (timerRef: {
             currentSelection.head.line === head.line &&
             currentSelection.head.ch === head.ch
           ) {
-            // 获取选中的文本
+            // 检查是否是全选
+            const totalContent = editor.getValue();
             const selectedText = editor.getRange(
               {
                 line: Math.min(anchor.line, head.line),
@@ -129,6 +130,13 @@ const createSelectionHandler = (timerRef: {
                 ch: Math.max(anchor.ch, head.ch),
               }
             );
+            
+            // 如果选中的内容等于全部内容，则不执行加粗操作
+            if (selectedText === totalContent) {
+              console.log("Select all detected, skipping bold formatting");
+              return;
+            }
+
             console.log("Selected text to bold:", selectedText);
             if (selectedText) {
               const newText = `**${selectedText}**`;
