@@ -1,38 +1,11 @@
-import { Editor } from "@bytemd/react";
+import { Editor, Viewer } from "@bytemd/react";
 import breaks from "@bytemd/plugin-breaks";
-import { useGetState, useMount } from "ahooks";
 import { useEffect, useState } from "react";
 import * as LZString from "lz-string";
 
 const EditorView = () => {
-  const [value, setValue, getState] = useGetState<string>("");
-
-  const [isEditing, setIsEditing] = useState(true);
-
-  useMount(() => {
-    // 自动点击预览按钮
-    setTimeout(() => {
-      const [editEle, previewEle] = document.querySelectorAll(
-        ".bytemd-toolbar-tab"
-      ) as NodeListOf<HTMLElement>;
-
-      if (isEditing && getState()) {
-        previewEle?.click();
-      }
-
-      const handleEditClick = () => setIsEditing(true);
-      const handlePreviewClick = () => setIsEditing(false);
-
-      editEle?.addEventListener("click", handleEditClick);
-      previewEle?.addEventListener("click", handlePreviewClick);
-
-      // 返回清理函数
-      return () => {
-        editEle?.removeEventListener("click", handleEditClick);
-        previewEle?.removeEventListener("click", handlePreviewClick);
-      };
-    }, 200);
-  });
+  const [value, setValue] = useState<string>("");
+  const [isEditing, setIsEditing] = useState<boolean>(false);
 
   // 从 URL hash 中读取内容
   useEffect(() => {
@@ -58,12 +31,25 @@ const EditorView = () => {
   };
 
   return (
-    <Editor
-      value={value}
-      plugins={[breaks()]}
-      onChange={handleChange}
-      mode="tab"
-    />
+    <div className="container">
+      <h1>Reading Helper</h1>
+      <div className="editor-header">
+        <button onClick={() => setIsEditing(true)}>Edit</button>
+        <button onClick={() => setIsEditing(false)}>Preview</button>
+      </div>
+      <div className="editor-container">
+        {isEditing ? (
+          <Editor
+            value={value}
+            mode="tab"
+            plugins={[breaks()]}
+            onChange={handleChange}
+          />
+        ) : (
+          <Viewer plugins={[breaks()]} value={value} />
+        )}
+      </div>
+    </div>
   );
 };
 

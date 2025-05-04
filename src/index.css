@@ -11,6 +11,11 @@
   flex-direction: column;
   padding: 6px 12px;
   height: 100vh;
+
+  /* 护眼绿 */
+  background-color: #C7EDCC;
+
+  overflow: auto;
 }
 
 .container > h1 {
@@ -19,9 +24,33 @@
   line-height: 50px;
 }
 
-.container > div {
-  flex: 1;
+.editor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 6px 12px;
+}
 
+.editor-header button {
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  background-color: beige;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.editor-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.editor-container > div {
+  flex: 1;
   display: flex;
   flex-direction: column;
 }
