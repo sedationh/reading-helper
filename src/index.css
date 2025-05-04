@@ -30,17 +30,12 @@
   flex: auto;
 }
 
+.markdown-body {
+  margin: 0 auto;
+}
+
 .markdown-body p {
-  line-height: 1.6em;
+  line-height: 2em;
   margin-bottom: 1rem;
-}
-
-.bytemd-toolbar-icon {
-  display: none !important;
-}
-
-/* 只显示最后两个列表按钮 */
-.bytemd-toolbar-icon[bytemd-tippy-path="11"],
-.bytemd-toolbar-icon[bytemd-tippy-path="12"] {
-  display: inline-flex !important;
+  max-width: 800px;
 }

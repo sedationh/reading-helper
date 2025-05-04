@@ -13,9 +13,11 @@
   "dependencies": {
     "@bytemd/plugin-breaks": "^1.21.0",
     "@bytemd/react": "^1.21.0",
+    "@types/lz-string": "^1.5.0",
     "ahooks": "^3.7.8",
     "antd": "^5.24.3",
     "bytemd": "^1.21.0",
+    "lz-string": "^1.5.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
