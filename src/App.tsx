@@ -7,7 +7,6 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<EditorView />} />
-        <Route path="/:content" element={<EditorView />} />
       </Routes>
     </BrowserRouter>
   );

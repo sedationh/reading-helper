@@ -2,24 +2,26 @@ import { Editor, Viewer } from "@bytemd/react";
 import breaks from "@bytemd/plugin-breaks";
 import { useMemo, useState } from "react";
 import * as LZString from "lz-string";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 const EditorView = () => {
   const navigate = useNavigate();
-  const { content } = useParams();
+  const [searchParams] = useSearchParams();
+  const content = searchParams.get('content');
   const [isEditing, setIsEditing] = useState<boolean>(!content);
   const value = useMemo(() => {
+    if (!content) return "";
     return LZString.decompressFromEncodedURIComponent(content);
   }, [content]);
 
-  // 将内容同步到 URL path
+  // 将内容同步到 URL query
   const handleChange = (newValue: string) => {
     if (newValue === "") {
       navigate("/");
       return;
     }
     const compressed = LZString.compressToEncodedURIComponent(newValue);
-    navigate(`/${compressed}`);
+    navigate(`/?content=${compressed}`);
   };
 
   return (
