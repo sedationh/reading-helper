@@ -7,7 +7,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 const EditorView = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const content = searchParams.get('content');
+  const content = searchParams.get("content");
   const [isEditing, setIsEditing] = useState<boolean>(!content);
   const value = useMemo(() => {
     if (!content) return "";
@@ -20,8 +20,15 @@ const EditorView = () => {
       navigate("/");
       return;
     }
+    // 完整内容用于 query 参数
     const compressed = LZString.compressToEncodedURIComponent(newValue);
-    navigate(`/?content=${compressed}`);
+
+    // 截取前 20 个字符用于 path, 只用来区分不同的内容，不包含特殊字符
+    const truncatedContent = newValue.slice(0, 20);
+    const pathContent = LZString.compressToEncodedURIComponent(
+      truncatedContent.replace(/[^a-zA-Z]/g, "")
+    );
+    navigate(`/${pathContent}?content=${compressed}`);
   };
 
   return (
