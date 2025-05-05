@@ -14,6 +14,10 @@ const EditorView = () => {
 
   // 将内容同步到 URL path
   const handleChange = (newValue: string) => {
+    if (newValue === "") {
+      navigate("/");
+      return;
+    }
     const compressed = LZString.compressToEncodedURIComponent(newValue);
     navigate(`/${compressed}`);
   };
