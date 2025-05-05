@@ -2,12 +2,12 @@ import { Editor, Viewer } from "@bytemd/react";
 import breaks from "@bytemd/plugin-breaks";
 import { useMemo, useState } from "react";
 import * as LZString from "lz-string";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const EditorView = () => {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const content = searchParams.get("content");
+  const content = useLocation().hash?.slice(1);
+
   const [isEditing, setIsEditing] = useState<boolean>(!content);
   const value = useMemo(() => {
     if (!content) return "";
@@ -26,9 +26,9 @@ const EditorView = () => {
     // 截取前 20 个字符用于 path, 只用来区分不同的内容，不包含特殊字符
     const truncatedContent = newValue.slice(0, 20);
     const pathContent = LZString.compressToEncodedURIComponent(
-      truncatedContent.replace(/[^a-zA-Z]/g, "")
-    );
-    navigate(`/${pathContent}?content=${compressed}`);
+      truncatedContent
+    ).replace(/[^a-zA-Z]/g, "");
+    navigate(`/${pathContent}#${compressed}`);
   };
 
   return (
