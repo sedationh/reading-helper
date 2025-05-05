@@ -13,7 +13,7 @@
   height: 100vh;
 
   /* 护眼绿 */
-  background-color: #C7EDCC;
+  background-color: #c7edcc;
 
   overflow: auto;
 }
@@ -22,6 +22,7 @@
   text-align: center;
   height: 50px;
   line-height: 50px;
+  cursor: pointer;
 }
 
 .editor-header {
@@ -67,4 +68,5 @@
   line-height: 2em;
   margin-bottom: 1rem;
   max-width: 800px;
+  font-size: 18px;
 }

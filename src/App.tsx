@@ -1,9 +1,16 @@
 import EditorView from "./Editor";
-
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./index.css";
 
 function App() {
-  return <EditorView />;
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<EditorView />} />
+        <Route path="/:content" element={<EditorView />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 export default App;

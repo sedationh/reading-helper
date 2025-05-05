@@ -1,41 +1,41 @@
 import { Editor, Viewer } from "@bytemd/react";
 import breaks from "@bytemd/plugin-breaks";
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import * as LZString from "lz-string";
+import { useNavigate, useParams } from "react-router-dom";
 
 const EditorView = () => {
-  const [value, setValue] = useState<string>("");
-  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const navigate = useNavigate();
+  const { content } = useParams();
+  const [isEditing, setIsEditing] = useState<boolean>(!content);
+  const value = useMemo(() => {
+    return LZString.decompressFromEncodedURIComponent(content);
+  }, [content]);
 
-  // 从 URL hash 中读取内容
-  useEffect(() => {
-    const hash = window.location.hash.slice(1);
-    if (hash) {
-      try {
-        const decompressed = LZString.decompressFromEncodedURIComponent(hash);
-        if (decompressed !== null) {
-          setValue(decompressed);
-        }
-      } catch (err) {
-        console.error("Failed to decompress URL hash content:", err);
-      }
-    }
-  }, []);
-
-  // 将内容同步到 URL hash
+  // 将内容同步到 URL path
   const handleChange = (newValue: string) => {
-    setValue(newValue);
-
     const compressed = LZString.compressToEncodedURIComponent(newValue);
-    window.location.hash = compressed;
+    navigate(`/${compressed}`);
   };
 
   return (
     <div className="container">
-      <h1>Reading Helper</h1>
+      <h1
+        onClick={() => {
+          navigate("/");
+          setIsEditing(true);
+        }}
+      >
+        Reading Helper
+      </h1>
       <div className="editor-header">
-        <button onClick={() => setIsEditing(true)}>Edit</button>
-        <button onClick={() => setIsEditing(false)}>Preview</button>
+        {isEditing ? (
+          <>
+            <button onClick={() => setIsEditing(false)}>Preview</button>
+          </>
+        ) : (
+          <button onClick={() => setIsEditing(true)}>Edit</button>
+        )}
       </div>
       <div className="editor-container">
         {isEditing ? (
