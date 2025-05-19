@@ -59,7 +59,10 @@ const EditorView = () => {
             onChange={handleChange}
           />
         ) : (
-          <Viewer plugins={[breaks()]} value={value} />
+          <Viewer
+            plugins={[breaks()]}
+            value={value.replace(/\r?\n/g, "\n\n")}
+          />
         )}
       </div>
     </div>
