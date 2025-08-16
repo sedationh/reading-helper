@@ -33,58 +33,61 @@ const EditorView = () => {
 
   return (
     <div className="container">
-      <h1
-        onClick={() => {
-          navigate("/");
-          setIsEditing(true);
-        }}
-      >
-        Reading Helper
-      </h1>
       <div className="editor-header">
-        {isEditing ? (
-          <>
-            <button onClick={() => setIsEditing(false)}>Preview</button>
-            <button
-              onClick={() => {
-                // 合并字幕内容后，按句子分割并累加，尽量不超过80字符分段，避免句子被截断
-                const mergeSubtitlesBySentence = (input) => {
-                  // 合并所有字幕文本
-                  const merged = input
-                    .split(/\r?\n/)
-                    .filter(
-                      (line) =>
-                        !/^\d+$/.test(line.trim()) &&
-                        !/^\d{2}:\d{2}:\d{2},\d{3}/.test(line.trim()) &&
-                        line.trim() !== ""
-                    )
-                    .join(" ");
-                  // 按句子分割（中英文标点）
-                  const sentences = merged.match(/[^。！？.!?]+[。！？.!?]?/g) || [];
-                  const segments = [];
-                  let current = "";
-                  for (const sentence of sentences) {
-                    if ((current + sentence).length > 80) {
-                      if (current) segments.push(current.trim());
-                      current = sentence;
-                    } else {
-                      current += sentence;
+        <h1
+          onClick={() => {
+            navigate("/");
+            setIsEditing(true);
+          }}
+        >
+          Reading Helper
+        </h1>
+        <div>
+          {isEditing ? (
+            <>
+              <button onClick={() => setIsEditing(false)}>Preview</button>
+              <button
+                onClick={() => {
+                  // 合并字幕内容后，按句子分割并累加，尽量不超过80字符分段，避免句子被截断
+                  const mergeSubtitlesBySentence = (input) => {
+                    // 合并所有字幕文本
+                    const merged = input
+                      .split(/\r?\n/)
+                      .filter(
+                        (line) =>
+                          !/^\d+$/.test(line.trim()) &&
+                          !/^\d{2}:\d{2}:\d{2},\d{3}/.test(line.trim()) &&
+                          line.trim() !== ""
+                      )
+                      .join(" ");
+                    // 按句子分割（中英文标点）
+                    const sentences =
+                      merged.match(/[^。！？.!?]+[。！？.!?]?/g) || [];
+                    const segments = [];
+                    let current = "";
+                    for (const sentence of sentences) {
+                      if ((current + sentence).length > 80) {
+                        if (current) segments.push(current.trim());
+                        current = sentence;
+                      } else {
+                        current += sentence;
+                      }
                     }
-                  }
-                  if (current) segments.push(current.trim());
-                  return segments.join("\n\n");
-                };
-                const merged = mergeSubtitlesBySentence(value);
-                handleChange(merged);
-              }}
-              style={{ marginLeft: 8 }}
-            >
-              合并台词
-            </button>
-          </>
-        ) : (
-          <button onClick={() => setIsEditing(true)}>Edit</button>
-        )}
+                    if (current) segments.push(current.trim());
+                    return segments.join("\n\n");
+                  };
+                  const merged = mergeSubtitlesBySentence(value);
+                  handleChange(merged);
+                }}
+                style={{ marginLeft: 8 }}
+              >
+                合并台词
+              </button>
+            </>
+          ) : (
+            <button onClick={() => setIsEditing(true)}>Edit</button>
+          )}
+        </div>
       </div>
       <div className="editor-container">
         {isEditing ? (
