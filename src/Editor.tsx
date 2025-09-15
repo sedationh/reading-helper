@@ -1,8 +1,9 @@
-import { Editor, Viewer } from "@bytemd/react";
+import { Editor } from "@bytemd/react";
 import breaks from "@bytemd/plugin-breaks";
 import { useMemo, useState } from "react";
 import * as LZString from "lz-string";
 import { useNavigate, useLocation } from "react-router-dom";
+import ReadingViewer from "./ReadingViewer";
 
 const EditorView = () => {
   const navigate = useNavigate();
@@ -98,8 +99,7 @@ const EditorView = () => {
             onChange={handleChange}
           />
         ) : (
-          <Viewer
-            plugins={[breaks()]}
+          <ReadingViewer
             value={value.replace(/\r?\n/g, "\n\n")}
           />
         )}

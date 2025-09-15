@@ -73,3 +73,352 @@
 .bytemd-toolbar {
   display: none;
 }
+
+/* 阅读器样式 */
+.reading-viewer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  padding-top: 100px; /* 为固定按钮留出空间 */
+}
+
+.reading-controls {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  z-index: 1000;
+  background-color: rgba(199, 237, 204, 0.95);
+  padding: 10px 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(10px);
+  flex-wrap: wrap;
+}
+
+
+.voice-settings {
+  background-color: rgba(255, 255, 255, 0.4);
+  border-radius: 12px;
+  padding: 15px;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  align-items: center;
+  justify-content: center;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.setting-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 120px;
+}
+
+.setting-group label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  min-width: 50px;
+}
+
+.voice-select {
+  padding: 4px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: white;
+  font-size: 12px;
+  min-width: 150px;
+}
+
+.setting-slider {
+  width: 80px;
+  height: 4px;
+  background: #ddd;
+  outline: none;
+  border-radius: 2px;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.setting-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  background: #4CAF50;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.setting-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  background: #4CAF50;
+  cursor: pointer;
+  border-radius: 50%;
+  border: none;
+}
+
+.setting-value {
+  font-size: 12px;
+  color: #666;
+  min-width: 35px;
+  text-align: right;
+}
+
+.current-voice-info {
+  font-size: 12px;
+  color: #4CAF50;
+  font-weight: 500;
+  padding: 4px 8px;
+  background-color: rgba(76, 175, 80, 0.1);
+  border-radius: 4px;
+  margin-left: 10px;
+}
+
+.current-voice-info.google-voice {
+  color: #FF9800;
+  background-color: rgba(255, 152, 0, 0.1);
+  border: 1px solid rgba(255, 152, 0, 0.3);
+}
+
+.current-voice-info.premium-voice {
+  color: #9C27B0;
+  background-color: rgba(156, 39, 176, 0.1);
+  border: 1px solid rgba(156, 39, 176, 0.3);
+}
+
+.quality-badge {
+  font-size: 10px;
+  color: #FF9800;
+  background-color: rgba(255, 152, 0, 0.2);
+  padding: 2px 6px;
+  border-radius: 3px;
+  margin-left: 8px;
+  font-weight: 600;
+}
+
+.premium-badge {
+  font-size: 10px;
+  color: #9C27B0;
+  background-color: rgba(156, 39, 176, 0.2);
+  padding: 2px 6px;
+  border-radius: 3px;
+  margin-left: 8px;
+  font-weight: 600;
+}
+
+.play-all-button {
+  padding: 10px 20px;
+  border: 1px solid #4CAF50;
+  background-color: #4CAF50;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: all 0.2s;
+  min-width: 140px;
+}
+
+.play-all-button:hover:not(:disabled) {
+  background-color: #45a049;
+  transform: translateY(-1px);
+}
+
+.play-all-button:disabled {
+  background-color: #ccc;
+  border-color: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.play-all-button.playing {
+  background-color: #ff9800;
+  border-color: #ff9800;
+  animation: pulse 1.5s infinite;
+}
+
+.play-all-button.paused {
+  background-color: #2196F3;
+  border-color: #2196F3;
+}
+
+.stop-button {
+  padding: 8px 16px;
+  border: 1px solid #ff6b6b;
+  background-color: #ff6b6b;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.stop-button:disabled {
+  background-color: #ccc;
+  border-color: #ccc;
+  cursor: not-allowed;
+}
+
+.stop-button:not(:disabled):hover {
+  background-color: #ff5252;
+}
+
+.test-voice-button {
+  padding: 8px 16px;
+  border: 1px solid #2196F3;
+  background-color: #2196F3;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.test-voice-button:disabled {
+  background-color: #ccc;
+  border-color: #ccc;
+  cursor: not-allowed;
+}
+
+.test-voice-button:not(:disabled):hover {
+  background-color: #1976D2;
+}
+
+.paragraphs-container {
+  flex: 1;
+  max-width: 900px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.paragraph-with-buttons {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  gap: 15px;
+  padding: 15px;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  transition: background-color 0.2s;
+}
+
+.paragraph-with-buttons:hover {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.paragraph-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 120px;
+}
+
+.paragraph-content {
+  flex: 1;
+}
+
+.paragraph-content p {
+  line-height: 1.8em;
+  margin: 0;
+  font-size: 18px;
+  color: #333;
+}
+
+.read-button {
+  padding: 8px 16px;
+  border: 1px solid #4CAF50;
+  background-color: #4CAF50;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+  white-space: nowrap;
+  min-width: 80px;
+}
+
+.read-button:hover:not(:disabled) {
+  background-color: #45a049;
+  transform: translateY(-1px);
+}
+
+.read-button:disabled {
+  background-color: #ccc;
+  border-color: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.read-button.speaking {
+  background-color: #ff9800;
+  border-color: #ff9800;
+  animation: pulse 1.5s infinite;
+}
+
+.read-button.current-playing {
+  background-color: #2196F3;
+  border-color: #2196F3;
+  box-shadow: 0 0 10px rgba(33, 150, 243, 0.5);
+}
+
+.start-from-button {
+  padding: 6px 12px;
+  border: 1px solid #9C27B0;
+  background-color: #9C27B0;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s;
+  white-space: nowrap;
+  min-width: 100px;
+}
+
+.start-from-button:hover:not(:disabled) {
+  background-color: #8E24AA;
+  transform: translateY(-1px);
+}
+
+.start-from-button:disabled {
+  background-color: #ccc;
+  border-color: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.start-from-button.current-playing {
+  background-color: #FF9800;
+  border-color: #FF9800;
+  box-shadow: 0 0 10px rgba(255, 152, 0, 0.5);
+}
+
+.start-from-button.selected-start {
+  background-color: #4CAF50;
+  border-color: #4CAF50;
+  box-shadow: 0 0 8px rgba(76, 175, 80, 0.4);
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
