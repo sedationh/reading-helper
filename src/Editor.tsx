@@ -1,9 +1,8 @@
-import { Editor } from "@bytemd/react";
+import { Editor, Viewer } from "@bytemd/react";
 import breaks from "@bytemd/plugin-breaks";
 import { useMemo, useState } from "react";
 import * as LZString from "lz-string";
 import { useNavigate, useLocation } from "react-router-dom";
-import ReadingViewer from "./ReadingViewer";
 
 const EditorView = () => {
   const navigate = useNavigate();
@@ -37,11 +36,10 @@ const EditorView = () => {
       <div className="editor-header">
         <h1
           onClick={() => {
-            navigate("/");
             setIsEditing(true);
           }}
         >
-          Reading Helper
+          Markdown Editor
         </h1>
         <div>
           {isEditing ? (
@@ -99,9 +97,7 @@ const EditorView = () => {
             onChange={handleChange}
           />
         ) : (
-          <ReadingViewer
-            value={value.replace(/\r?\n/g, "\n\n")}
-          />
+          <Viewer value={value} plugins={[breaks()]} />
         )}
       </div>
     </div>
